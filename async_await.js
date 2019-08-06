@@ -1,5 +1,11 @@
 /*modifying to use lambda
-1. chaining promise calls*/
+Instead of chaining the promise calls, we could use async await to accomplish this
+If a function uses await that function must be declared as async.
+When we use await with on a function call which returns a promise, we will wait till we recive teh response
+from the promise.
+async function returns a promise.
+If we use await, to capture any errors, we need to wrap the code in try catch block.
+*/
 
 console.log("before");
 // const user = getUserFromDB(1,displayUser);
@@ -16,13 +22,26 @@ console.log("before");
 //   getCommits(repositories[0],displayCommit);
 // }
 
-getUserFromDB(1)
-  .then(user => getRepositories(user.gitHubUserName))
-  .then(repos => getCommits(repos[0]))
-  .then(commits => console.log("Commits:",commits))
-  .catch(err=>console.log("Error:",err.message));
-  //id an error occurs in any of the above promise calls the catch block is invoked
+// getUserFromDB(1)
+//   .then(user => getRepositories(user.gitHubUserName))
+//   .then(repos => getCommits(repos[0]))
+//   .then(commits => console.log("Commits:",commits))
+//   .catch(err=>console.log("Error:",err.message));
+//   //id an error occurs in any of the above promise calls the catch block is invoked
 
+async function displayCommits(){
+  try{
+    const user = await getUserFromDB(1);
+    const repos = await getRepositories(user.gitHubUserName);
+    const commits = await getCommits(repos[0]);
+    console.log("Commits:",commits);
+  }
+  catch(err){
+    console.log('Error:',err.message);
+  }
+}
+
+displayCommits();
 console.log("after");
 
 function getUserFromDB(id){
